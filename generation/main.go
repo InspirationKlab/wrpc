@@ -26,7 +26,7 @@ const switchCaseTemplate = `
 const switchCaseSyncTemplate = `
 		case "%s":
 				go func(request wrpc.RequestBase) {
-					typedArg := %s(parsed.Args.(%s))
+					typedArg := wrpc.AsTyped[%s](&request)
 					result := %s.%s(%s)
 					outChannel <- wrpc.Response{
 						Id: request.Id,
@@ -39,7 +39,7 @@ const switchCaseSyncTemplate = `
 const switchCaseAsyncTemplate = `
 			case "%s":
 				go func(request wrpc.RequestBase) {
-					typedArg := %s(parsed.Args.(%s))
+					typedArg := wrpc.AsTyped[%s](&request)
 					result := %s.%s(%s)
 					for {
 						select {
@@ -139,13 +139,11 @@ func renderInvocation(info FuncInfo) string {
 
 func functionInfoToText(info FuncInfo) string {
 
-	argCoercedTo := processTypeCoercion(info.ParamType)
-
 	if strings.Contains(info.ReturnType, "chan") {
-		return fmt.Sprintf(switchCaseAsyncTemplate, info.Name, info.ParamType, argCoercedTo, os.Getenv("GOPACKAGE"), info.Name, renderInvocation(info))
+		return fmt.Sprintf(switchCaseAsyncTemplate, info.Name, info.ParamType, os.Getenv("GOPACKAGE"), info.Name, renderInvocation(info))
 	}
 
-	return fmt.Sprintf(switchCaseSyncTemplate, info.Name, info.ParamType, argCoercedTo, os.Getenv("GOPACKAGE"), info.Name, renderInvocation(info))
+	return fmt.Sprintf(switchCaseSyncTemplate, info.Name, info.ParamType, os.Getenv("GOPACKAGE"), info.Name, renderInvocation(info))
 
 }
 
