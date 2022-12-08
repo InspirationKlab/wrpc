@@ -57,7 +57,7 @@ const switchCaseAsyncTemplate = `
 const template = `
 package wrpc_app
 
-import "blacksec.com/wrpc/v2"
+import "github.com/InspirationKlab/wrpc"
 
 func WsAppEntry(/* wrpc-app-deps:begin */   /* wrpc-app-deps:end */) func(writer http.ResponseWriter, request *http.Request) {
 	return func(writer http.ResponseWriter, request *http.Request){
