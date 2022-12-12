@@ -1,7 +1,9 @@
 package example
 
-//go:generate go run ../generation/main.go
-func StreamMessages(request int, context AppContext) <-chan string {
+import "bytes"
+
+//go:generate ../generation/generation
+func StreamMessages(request int, context, other AppContext, third bytes.Buffer) <-chan string {
 	return make(chan string)
 }
 
